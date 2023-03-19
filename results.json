@@ -1,5 +1,29 @@
 {
     "What are some non\u2010pharmacological interventions for headache in children and adolescents?": {
-        "v1": "Non-pharmacological interventions for headache in children and adolescents include repetitive neuromuscular magnetic stimulation (rNMS), parental education to promote sleep development, setting up bedtime rituals adapted to the child's age and particularities, specific behavioral strategies including bedtime fading, gradual extinction and positive reinforcement of adapted behaviors, and remote electrical neuromodulation (REN)."
+        "v1": "Non-pharmacological interventions for headache in children and adolescents include repetitive neuromuscular magnetic stimulation (rNMS), parental education to promote sleep development, setting up bedtime rituals adapted to the child's age and particularities, specific behavioral strategies including bedtime fading, gradual extinction and positive reinforcement of adapted behaviors, and remote electrical neuromodulation (REN).",
+        "v2": {
+            "output_text": "The given portions of the documents do not provide specific information on non-pharmacological interventions for headache in children and adolescents.\nSOURCES: 35660103, 35120753, 34153363, 33349920, 31317889"
+        },
+        "v3": {
+            "output_text": "\n\nThe original answer remains relevant and does not need to be updated. However, it is important to note that the incidence of emotional and behavioral disorders is high in children and adolescents with frequent episodic or chronic tension type headaches. Therefore, a multidisciplinary approach including cognitive-behavioral therapy, relaxation techniques, biofeedback, physical therapy, and lifestyle modifications may be necessary to address both the headache and the underlying emotional and behavioral disorders. Additionally, non-pharmacological interventions such as repetitive neuromuscular magnetic stimulation (rNMS) and remote electrical neuromodulation (REN) may offer safe and effective alternatives for the treatment of headache in children and adolescents. \n\nSources: 33349920, 34153363, 31317889"
+        }
+    },
+    "What are the indications for spontaneous bacterial peritonitis prophylaxis?": {
+        "v1": "Albumin is currently employed as a plasma expander to prevent and treat specific complications of cirrhosis with ascites, such as the prevention of paracentesis-induced circulatory dysfunction and renal dysfunction induced by spontaneous bacterial peritonitis.",
+        "v2": {
+            "output_text": "The indications for spontaneous bacterial peritonitis prophylaxis are not specified in the given portions of the document. \nSOURCES: 34653572, 33321078, 33314175, 32213034"
+        },
+        "v3": {
+            "output_text": "\n\nThe new context provided does not directly answer the question about indications for spontaneous bacterial peritonitis prophylaxis. Therefore, the original answer remains unchanged. Further research and clinical guidelines are needed to determine appropriate indications for prophylaxis. The provided source (33314175) evaluated the effect of non-selective beta-blockers on infection-related admissions in cirrhotic patients and did not provide specific indications for prophylactic use of antibiotics to prevent spontaneous bacterial peritonitis."
+        }
+    },
+    "What are the reasons to start antibiotics to prevent spontaneous bacterial peritonitis prophylaxis?": {
+        "v1": "The reason to start antibiotics to prevent spontaneous bacterial peritonitis prophylaxis is to provide appropriate acute management, including antimicrobial treatment, and to use a wide spectrum antimicrobial agent with activity against Pseudomonas aeruginosa, other common Gram negative organisms, and Staphylococcus aureus.",
+        "v2": {
+            "output_text": "The given content does not provide the reasons to start antibiotics to prevent spontaneous bacterial peritonitis prophylaxis.\nSOURCES:"
+        },
+        "v3": {
+            "output_text": "The reasons to start antibiotics to prevent spontaneous bacterial peritonitis prophylaxis are not explicitly stated in the given context information. However, it is mentioned that early diagnostic paracentesis is essential so that appropriate acute management, including antimicrobial treatment can be started. It is also suggested that in patients with cystic fibrosis, it would seem reasonable to use a wide spectrum antimicrobial agent with activity against Pseudomonas aeruginosa, other common Gram negative organisms, and Staphylococcus aureus. This may be for chronic (continuous) antimicrobial prophylaxis or only during periods when bacteraemia is possible (for example, dental work, bronchoscopy)."
+        }
     }
 }

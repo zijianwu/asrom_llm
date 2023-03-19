@@ -1,10 +1,15 @@
 import os
 from collections import defaultdict
 
-from asrom_llm.qa import get_qa_v1
+from asrom_llm.qa import get_qa_v1, get_qa_v2, get_qa_v3
 from asrom_llm.utils import load_json, save_json
 
-QUERY = "What are some non‐pharmacological interventions for headache in children and adolescents?"
+QUERIES = [
+    "What are some non‐pharmacological interventions for headache in children and adolescents?",
+    "What are the indications for spontaneous bacterial peritonitis prophylaxis?",
+    "What are the reasons to start antibiotics to prevent spontaneous bacterial peritonitis prophylaxis?",
+    "What some signs one should see in a patient that indicate that the patient is in need of antibiotics to prevent spontaneous bacterial peritonitis prophylaxis?",
+]
 RESULTS_PATH = "results.json"
 
 if os.path.isfile(RESULTS_PATH):
@@ -13,8 +18,15 @@ if os.path.isfile(RESULTS_PATH):
 else:
     results = defaultdict(lambda: defaultdict(str))
 
-if not results[QUERY]["v1"]:
-    v1_result = get_qa_v1(QUERY, verbose=True)
-    results[QUERY]["v1"] = v1_result
+for QUERY in QUERIES:
+    if not results[QUERY].get("v1", None):
+        v1_result = get_qa_v1(QUERY, verbose=True)
+        results[QUERY]["v1"] = v1_result
+    if not results[QUERY].get("v2", None):
+        v2_result = get_qa_v2(QUERY, verbose=True)
+        results[QUERY]["v2"] = v2_result
+    if not results[QUERY].get("v3", None):
+        v3_result = get_qa_v3(QUERY, verbose=True)
+        results[QUERY]["v3"] = v3_result
 
 save_json(results, RESULTS_PATH)
