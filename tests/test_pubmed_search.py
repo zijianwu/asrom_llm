@@ -474,7 +474,7 @@ def records():
 
 def test_parse_result(records):
     parsed_result = parse_result(records)
-    assert parsed_result.shape == (5, 4)
+    assert parsed_result.shape == (5, 7)
 
 
 @pytest.mark.slow

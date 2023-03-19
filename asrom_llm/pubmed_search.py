@@ -55,6 +55,9 @@ def parse_result(records):
             "Authors": record.get("AU", ""),
             "Publication Date": record.get("DP", ""),
             "Title": record.get("TI", ""),
+            "Journal Title": record.get("JT", ""),
+            "PMC": record.get("PMC", ""),
+            "PMID": record.get("PMID", ""),
         }
         for record in records
     ]
