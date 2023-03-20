@@ -8,6 +8,7 @@ QUERIES = [
     "What are some non‐pharmacological interventions for headache in children and adolescents?",
     "What are the indications for spontaneous bacterial peritonitis prophylaxis?",
     "What are the reasons to start antibiotics to prevent spontaneous bacterial peritonitis prophylaxis?",
+    "Does psilocybin cause psychosis?",
 ]
 RESULTS_PATH = "results.json"
 

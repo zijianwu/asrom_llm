@@ -1,4 +1,13 @@
 {
+    "Does psilocybin cause psychosis?": {
+        "v1": "Psilocybin can induce psychosis-like symptoms in some individuals, but it is not known to cause long-term mental health problems or schizophrenia. However, individuals with a history of psychiatric disorders or a family history of such disorders may be at greater risk for adverse effects from psilocybin use.",
+        "v2": {
+            "output_text": "Psilocybin can induce a \"model psychosis\" similar to some symptoms of schizophrenia, but the text does not provide evidence that psilocybin causes psychosis or is associated with an increased rate of mental health outcomes. However, there is a report documenting the development of substance-induced psychosis in a young patient who used a large amount of psilocybin. More research is needed to fully understand the relationship between psilocybin and psychosis. \nSOURCES: 36049313, 36048112, 35900779, 23976938, 23942028, 23784738, 22030715"
+        },
+        "v3": {
+            "output_text": "\n\nThe new context suggests that psilocybin can produce effects similar to positive symptoms of schizophrenia, which are associated with psychosis. However, the study cited in the new context found that psilocybin did not disrupt processing of prediction errors (PE) in healthy subjects, unlike the NMDAR antagonist ketamine. Aberrant PE signaling is thought to contribute to the formation of cognitive impairments in schizophrenia. While psilocybin may have some effects similar to psychosis, it does not necessarily cause psychosis. Clinical studies have not found evidence that psilocybin or other psychedelics cause long-term mental health problems or are independent risk factors for mental health problems. Individuals should still use caution when using psilocybin and seek medical attention if they experience any concerning symptoms.\n\nSources:\n- 35900779\n- https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6007659/\n- 23976938\n- 23942028\n- 22030715"
+        }
+    },
     "What are some non\u2010pharmacological interventions for headache in children and adolescents?": {
         "v1": "Non-pharmacological interventions for headache in children and adolescents include repetitive neuromuscular magnetic stimulation (rNMS), parental education to promote sleep development, setting up bedtime rituals adapted to the child's age and particularities, specific behavioral strategies including bedtime fading, gradual extinction and positive reinforcement of adapted behaviors, and remote electrical neuromodulation (REN).",
         "v2": {

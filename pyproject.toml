@@ -17,6 +17,7 @@ transformers = "^4.27.1"
 sentence-transformers = "^2.2.2"
 chroma = "^0.2.0"
 pubmed-parser = {git = "https://github.com/titipata/pubmed_parser.git"}
+chromadb = "^0.3.11"
 
 
 

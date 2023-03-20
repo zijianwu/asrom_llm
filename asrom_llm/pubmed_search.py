@@ -2,11 +2,12 @@ import os
 import urllib
 
 import pandas as pd
-import psycopg2
 from Bio import Entrez, Medline
+from chromadb.config import Settings
+from langchain.docstore.document import Document
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import Chroma
 from pubmed_parser import parse_medline_xml
-
-from asrom_llm.utils import verbose_print
 
 
 def search_pubmed(query, page_num=1, page_size=10):
@@ -95,43 +96,58 @@ def download_pubmed_baseline(year=23, file_num=1, dir_path="./data/pubmed/"):
     return file_path
 
 
-def connect_to_postgres(dbname, user, password, host, port):
-    conn = psycopg2.connect(
-        dbname=dbname, user=user, password=password, host=host, port=port
-    )
-    return conn
+def split_parsed_data_into_doc_format(parsed_data):
+    """Splits the parsed data into a list of tuples in doc format
 
+    Takes the parsed data (list of dictionaries) and splits it into the
+    doc format of an array of tuples where the first element is the abstract
+    and the second is the metadata, without the abstract, and with a source
 
-def insert_into_postgres(
-    conn, data_dict, table_name="asrom_db", verbose=False
-):
-    cursor = conn.cursor()
+    Args:
+    - parsed_data (list): A list of dictionaries, each representing a Medline record.
 
-    # Create the INSERT query
-    columns = ", ".join(data_dict.keys())
-    values = ", ".join(["%s"] * len(data_dict))
-    query = f"INSERT INTO {table_name} ({columns}) VALUES ({values})"
-
-    # Execute the query
-    cursor.execute(query, list(data_dict.values()))
-
-    # Commit the transaction
-    conn.commit()
-
-    # Close the cursor
-    cursor.close()
-
-    verbose_print("Data inserted successfully!", verbose=verbose)
+    Returns:
+    - list: A list of tuples in doc format.
+    """
+    result = []
+    for data_dict in parsed_data:
+        if data_dict["delete"] is True or not data_dict["abstract"]:
+            continue
+        else:
+            abstract = data_dict["abstract"]
+            del data_dict["abstract"]
+            data_dict["source"] = data_dict["pmid"]
+            data_dict = {k: str(v) for k, v in data_dict.items()}
+            result.append((abstract, data_dict))
+    return result
 
 
 gz_file = download_pubmed_baseline(
     year=23, file_num=1, dir_path="./data/pubmed/"
 )
 parsed_data = parse_medline_xml(gz_file)
-conn = connect_to_postgres(
-    dbname="postgres",
-    user="postgres",
-    password="password",
-    host="localhost",
-    port="5432",
+parsed_data = split_parsed_data_into_doc_format(parsed_data)
+docs = [
+    Document(page_content=abstract, metadata=page_content)
+    for abstract, page_content in parsed_data
+]
+HF_EMBEDDING_MODEL = "pritamdeka/S-PubMedBert-MS-MARCO"
+embeddings = HuggingFaceEmbeddings(model_name=HF_EMBEDDING_MODEL)
+vector_db = Chroma(
+    embedding_function=embeddings,
+    client_settings=Settings(
+        chroma_api_impl="rest",
+        chroma_server_host="localhost",
+        chroma_server_http_port="8000",
+    ),
+)
+
+db = Chroma.from_documents(
+    docs,
+    embedding=embeddings,
+    client_settings=Settings(
+        chroma_api_impl="rest",
+        chroma_server_host="localhost",
+        chroma_server_http_port="8000",
+    ),
 )
