@@ -27,3 +27,12 @@ def save_pickle(data, path):
 def verbose_print(text, verbose, **kwargs):
     if verbose:
         print(text, **kwargs)
+
+
+def chunks(n=5000, *lists):
+    """Yield successive n-sized chunks as tuples from multiple lists."""
+    max_length = max(len(lst) for lst in lists)
+
+    for i in range(0, max_length, n):
+        chunk_tuple = tuple(lst[i : i + n] for lst in lists)
+        yield chunk_tuple

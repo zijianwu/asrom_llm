@@ -15,9 +15,8 @@ biopython = "^1.81"
 tiktoken = "^0.3.2"
 transformers = "^4.27.1"
 sentence-transformers = "^2.2.2"
-chroma = "^0.2.0"
 pubmed-parser = {git = "https://github.com/titipata/pubmed_parser.git"}
-chromadb = "^0.3.11"
+pymilvus = "2.2.0"
 
 
 
@@ -59,6 +58,7 @@ exclude = '''
 '''
 
 [tool.isort]
+profile = "black"
 multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
