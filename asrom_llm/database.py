@@ -1,5 +1,3 @@
-import uuid
-
 from langchain.vectorstores import Milvus
 
 from asrom_llm.utils import chunks
@@ -82,9 +80,9 @@ class ModifiedMilvus(Milvus):
         embeddings = embedding.embed_query(texts[0])
         dim = len(embeddings)
         # Generate unique names
-        primary_field = "c" + str(uuid.uuid4().hex)
-        vector_field = "c" + str(uuid.uuid4().hex)
-        text_field = "c" + str(uuid.uuid4().hex)
+        primary_field = "primary_field"  # "c" + str(uuid.uuid4().hex)
+        vector_field = "vector_field"  # "c" + str(uuid.uuid4().hex)
+        text_field = "text_field"  # "c" + str(uuid.uuid4().hex)
         fields = []
         # Determine metadata schema
         if metadatas:
