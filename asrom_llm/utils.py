@@ -51,3 +51,10 @@ def call_api(func, max_attempts=3, sleep=3, *args, **kwargs):
                 continue
             else:
                 raise e
+
+
+def get_key_from_value(value, a_dict):
+    for key, val in a_dict.items():
+        if val == value:
+            return key
+    return None
