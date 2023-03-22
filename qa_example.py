@@ -1,7 +1,15 @@
 import os
 from collections import defaultdict
 
-from asrom_llm.qa import get_qa_v1, get_qa_v2, get_qa_v3
+from asrom_llm.qa import (
+    get_qa_v1,
+    get_qa_v2,
+    get_qa_v3,
+    get_qa_v4,
+    get_qa_v5,
+    get_qa_v6,
+    process_query,
+)
 from asrom_llm.utils import load_json, save_json
 
 QUERIES = [
@@ -11,6 +19,7 @@ QUERIES = [
     "Does psilocybin cause psychosis?",
 ]
 RESULTS_PATH = "results.json"
+HF_EMBEDDING_MODEL = "pritamdeka/S-PubMedBert-MS-MARCO"
 
 if os.path.isfile(RESULTS_PATH):
     results = load_json(RESULTS_PATH)
@@ -18,15 +27,17 @@ if os.path.isfile(RESULTS_PATH):
 else:
     results = defaultdict(lambda: defaultdict(str))
 
+qa_functions = {
+    "v1": get_qa_v1,
+    "v2": get_qa_v2,
+    "v3": get_qa_v3,
+    "v4": get_qa_v4,
+    "v5": get_qa_v5,
+    "v6": get_qa_v6,
+}
+
 for QUERY in QUERIES:
-    if not results[QUERY].get("v1", None):
-        v1_result = get_qa_v1(QUERY, verbose=True)
-        results[QUERY]["v1"] = v1_result
-    if not results[QUERY].get("v2", None):
-        v2_result = get_qa_v2(QUERY, verbose=True)
-        results[QUERY]["v2"] = v2_result
-    if not results[QUERY].get("v3", None):
-        v3_result = get_qa_v3(QUERY, verbose=True)
-        results[QUERY]["v3"] = v3_result
+    for version, function in qa_functions.items():
+        process_query(results, QUERY, version, function)
 
 save_json(results, RESULTS_PATH)

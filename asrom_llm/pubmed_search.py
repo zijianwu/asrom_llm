@@ -4,8 +4,10 @@ import urllib
 import pandas as pd
 from Bio import Entrez, Medline
 
+from asrom_llm.utils import call_api
 
-def search_pubmed(query, page_num=1, page_size=10):
+
+def search_pubmed(query, page_num=1, page_size=10, max_retries=3):
     """
     Searches the Pubmed database for articles that match the given search query,
     and returns the results in the specified page.
@@ -21,7 +23,8 @@ def search_pubmed(query, page_num=1, page_size=10):
     Entrez.email = "info@asrom.org"  # Replace with your email address
 
     # Use the esearch function to search the Pubmed database with the given search term.
-    handle = Entrez.esearch(
+    handle = call_api(
+        Entrez.esearch,
         db="pubmed",
         term=query,
         retstart=page_size * (page_num - 1),
@@ -33,8 +36,12 @@ def search_pubmed(query, page_num=1, page_size=10):
     id_list = record["IdList"]
 
     # Use the efetch function to retrieve the full Medline records for the articles.
-    handle = Entrez.efetch(
-        db="pubmed", id=id_list, rettype="medline", retmode="text"
+    handle = call_api(
+        Entrez.efetch,
+        db="pubmed",
+        id=id_list,
+        rettype="medline",
+        retmode="text",
     )
     records = Medline.parse(handle)
     return records
@@ -91,7 +98,7 @@ def download_pubmed_baseline(year=23, file_num=1, dir_path="./data/pubmed/"):
     return file_path
 
 
-def split_parsed_data_into_doc_format(parsed_data):
+def filter_split_parsed_data_into_doc_format(parsed_data):
     """Splits the parsed data into a list of tuples in doc format
 
     Takes the parsed data (list of dictionaries) and splits it into the
@@ -108,6 +115,8 @@ def split_parsed_data_into_doc_format(parsed_data):
     for data_dict in parsed_data:
         if data_dict["delete"] is True or not data_dict["abstract"]:
             continue
+        elif data_dict["pubdate"] < "2020":
+            continue
         else:
             abstract = data_dict["abstract"]
             del data_dict["abstract"]
@@ -117,15 +126,6 @@ def split_parsed_data_into_doc_format(parsed_data):
                 for k, v in data_dict.items()
                 if k
                 in [
-                    "title",
-                    "journal",
-                    "pmid",
-                    "authors",
-                    "pubdate",
-                    "mesh_terms",
-                    "publication_types",
-                    "doi",
-                    "pmc",
                     "source",
                 ]
             }

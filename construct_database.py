@@ -9,7 +9,7 @@ from pymilvus import connections, utility
 from asrom_llm.database import ModifiedMilvus
 from asrom_llm.pubmed_search import (
     download_pubmed_baseline,
-    split_parsed_data_into_doc_format,
+    filter_split_parsed_data_into_doc_format,
 )
 
 YEAR = 23
@@ -36,7 +36,12 @@ for file_num in range(START_FILE_NUM, MAX_FILE_NUM + 1):
     )
 
     parsed_data = parse_medline_xml(gz_file)
-    parsed_data = split_parsed_data_into_doc_format(parsed_data)
+    parsed_data = filter_split_parsed_data_into_doc_format(parsed_data)
+    if len(parsed_data) == 0:
+        print(
+            f"Took {(time.time() - start_time)/60:.2f} minutes; no docs after filters"
+        )
+        continue
 
     docs = [
         Document(page_content=abstract, metadata=page_content)

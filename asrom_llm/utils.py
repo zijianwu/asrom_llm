@@ -1,5 +1,6 @@
 import json
 import pickle
+import time
 
 
 def load_json(path):
@@ -36,3 +37,17 @@ def chunks(n=5000, *lists):
     for i in range(0, max_length, n):
         chunk_tuple = tuple(lst[i : i + n] for lst in lists)
         yield chunk_tuple
+
+
+def call_api(func, max_attempts=3, sleep=3, *args, **kwargs):
+    max_attempts = max_attempts
+    for attempt in range(max_attempts):
+        try:
+            result = func(*args, **kwargs)
+            return result
+        except Exception as e:
+            if attempt < max_attempts - 1:
+                time.sleep(sleep)  # Sleep for 5 seconds before retrying
+                continue
+            else:
+                raise e

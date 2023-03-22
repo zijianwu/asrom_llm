@@ -14,7 +14,11 @@ class ModifiedMilvus(Milvus):
         collection_name="medline_collection",
         **kwargs,
     ):
-        """Return VectorStore initialized from documents and embeddings."""
+        """Return VectorStore initialized from documents and embeddings.
+
+        Added ability to define a specific collection name.
+
+        """
         texts = [d.page_content for d in documents]
         metadatas = [d.metadata for d in documents]
         return cls.from_texts(
@@ -49,6 +53,9 @@ class ModifiedMilvus(Milvus):
         **kwargs,
     ):
         """Create a Milvus collection, indexes it with HNSW, and insert data.
+
+        Added ability to define a specific collection name.
+
         Args:
             texts (List[str]): Text to insert.
             embedding (Embeddings): Embedding function to use.
@@ -102,7 +109,7 @@ class ModifiedMilvus(Milvus):
                     raise ValueError(f"Unrecognized datatype for {key}.")
                 elif dtype == DataType.VARCHAR:
                     # Find out max length text based metadata
-                    max_length = 10_000  # 0
+                    max_length = 1_000  # 0
                     # for subvalues in metadatas:
                     #     max_length = max(max_length, len(subvalues[key]))
                     fields.append(
@@ -114,7 +121,7 @@ class ModifiedMilvus(Milvus):
                     fields.append(FieldSchema(key, dtype))
 
         # Find out max length of texts
-        max_length = 10_000  # 0
+        max_length = 1_000  # 0
         # for y in texts:
         #     max_length = max(max_length, len(y))
         # Create the text field
