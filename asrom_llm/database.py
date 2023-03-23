@@ -146,9 +146,9 @@ class ModifiedMilvus(Milvus):
         collection = Collection(collection_name, schema)
         # Index parameters for the collection
         index = {
-            "index_type": "HNSW",
+            "index_type": "IVF_SQ8",
             "metric_type": "L2",
-            "params": {"M": 8, "efConstruction": 64},
+            "params": {"nlist": 100},
         }
         # Create the index
         collection.create_index(vector_field, index)

@@ -13,7 +13,7 @@ from asrom_llm.pubmed_search import (
 )
 
 YEAR = 23
-START_FILE_NUM = 1
+START_FILE_NUM = 858
 MAX_FILE_NUM = 1166
 HF_EMBEDDING_MODEL = "pritamdeka/S-PubMedBert-MS-MARCO"
 RECURSIVE_TEXT_SPLITTER_CHUNK_SIZE = 1000

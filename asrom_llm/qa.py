@@ -18,6 +18,7 @@ def process_query(results, query, version, function):
             results[query][version] = result
         except Exception as e:
             print(f"Error processing {query} with {version}: {e}")
+    return results
 
 
 # Pubmed Search, Stuff, 0.2 temperature

@@ -40,6 +40,6 @@ for query, functions in QUERIES.items():
         functions = QA_FUNCTIONS.values()
     for function in functions:
         version = get_key_from_value(function, QA_FUNCTIONS)
-        process_query(results, query, version, function)
+        results = process_query(results, query, version, function)
 
 save_json(results, RESULTS_PATH)
