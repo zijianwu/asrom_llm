@@ -1,6 +1,10 @@
 import pytest
 
-from asrom_llm.pubmed_search import parse_result, search_pubmed
+from asrom_llm.pubmed_search import (
+    filter_split_parsed_data_into_doc_format,
+    parse_result,
+    search_pubmed,
+)
 
 
 @pytest.fixture
@@ -481,3 +485,39 @@ def test_parse_result(records):
 def test_search_pubmed(query):
     records = search_pubmed(query, page_num=1, page_size=5)
     assert len(list(records)) == 5
+
+
+def test_filter_split_parsed_data_into_doc_format():
+    parsed_data = [
+        {
+            "delete": False,
+            "abstract": "Sample abstract",
+            "pubdate": "2021",
+            "pmid": "1",
+        },
+        {
+            "delete": True,
+            "abstract": "This will be deleted",
+            "pubdate": "2021",
+            "pmid": "2",
+        },
+        {
+            "delete": False,
+            "abstract": "",
+            "pubdate": "2021",
+            "pmid": "3",
+        },
+        {
+            "delete": False,
+            "abstract": "Sample abstract",
+            "pubdate": "2019",
+            "pmid": "4",
+        },
+    ]
+
+    expected_result = [("Sample abstract", {"source": "1"})]
+
+    assert (
+        filter_split_parsed_data_into_doc_format(parsed_data)
+        == expected_result
+    )
