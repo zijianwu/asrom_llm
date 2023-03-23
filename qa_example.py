@@ -8,6 +8,12 @@ from asrom_llm.qa import (
     get_qa_v4,
     get_qa_v5,
     get_qa_v6,
+    get_qa_v7,
+    get_qa_v8,
+    get_qa_v9,
+    get_qa_v10,
+    get_qa_v11,
+    get_qa_v12,
     process_query,
 )
 from asrom_llm.utils import get_key_from_value, load_json, save_json
@@ -17,6 +23,7 @@ QUERIES = {
     "What are the indications for spontaneous bacterial peritonitis prophylaxis?": None,
     "What are the reasons to start antibiotics to prevent spontaneous bacterial peritonitis prophylaxis?": None,
     "Does psilocybin cause psychosis?": None,
+    "How do you diagnose and treat superior mesenteric artery syndrome?": None,
 }
 QA_FUNCTIONS = {
     "v1": get_qa_v1,
@@ -25,6 +32,12 @@ QA_FUNCTIONS = {
     "v4": get_qa_v4,
     "v5": get_qa_v5,
     "v6": get_qa_v6,
+    "v7": get_qa_v7,
+    "v8": get_qa_v8,
+    "v9": get_qa_v9,
+    "v10": get_qa_v10,
+    "v11": get_qa_v11,
+    "v12": get_qa_v12,
 }
 RESULTS_PATH = "results.json"
 HF_EMBEDDING_MODEL = "pritamdeka/S-PubMedBert-MS-MARCO"

@@ -1,14 +1,19 @@
 import time
 
+from langchain.chains import VectorDBQAWithSourcesChain
 from langchain.chains.qa_with_sources import load_qa_with_sources_chain
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI
 from langchain.docstore.document import Document
+from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.llms import OpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
+from asrom_llm.database import ModifiedMilvus
 from asrom_llm.pubmed_search import parse_result, search_pubmed
 from asrom_llm.utils import verbose_print
+
+HF_EMBEDDING_MODEL = "pritamdeka/S-PubMedBert-MS-MARCO"
 
 
 def process_query(results, query, version, function):
@@ -307,46 +312,229 @@ def get_qa_v6(query, llm=None, verbose=False):
     return result
 
 
-# from langchain.chains import VectorDBQAWithSourcesChain
-# from langchain import OpenAI
-# from langchain.docstore.document import Document
-# from langchain.embeddings import HuggingFaceEmbeddings
-# from langchain.text_splitter import RecursiveCharacterTextSplitter
-# from asrom_llm.database import ModifiedMilvus
+def get_qa_v7(query, llm=None, verbose=False):
+    start_time = time.time()
+    verbose_print("Loading LLM...", verbose=verbose, end="")
+    if not llm:
+        llm = OpenAI(
+            model_name="gpt-3.5-turbo",
+            organization="org-ANpnkjrEDLjbQriFNhWllHVQ",
+            temperature=0.2,
+        )
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+
+    start_time = time.time()
+    verbose_print(
+        "Loading database and embeddings...", verbose=verbose, end=""
+    )
+    embeddings = HuggingFaceEmbeddings(model_name=HF_EMBEDDING_MODEL)
+    db = ModifiedMilvus(
+        embedding_function=embeddings,
+        connection_args={"host": "127.0.0.1", "port": "19530"},
+        collection_name="medline_collection",
+        text_field="text_field",
+    )
+    chain = VectorDBQAWithSourcesChain.from_chain_type(
+        llm, chain_type="stuff", vectorstore=db
+    )
+    chain.k = 8
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+
+    start_time = time.time()
+    verbose_print("Getting answer... ", verbose=verbose, end="")
+    result = chain({"question": query}, return_only_outputs=True)
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+    return result
 
 
-# query = "How has the challenge of Endoscopic retrograde cholangiopancreatography (ERCP) in patients with Roux-en-Y gastric bypass anatomy typically been solved?"
-# verbose = True
-# llm = None
-# HF_EMBEDDING_MODEL = "pritamdeka/S-PubMedBert-MS-MARCO"
+def get_qa_v8(query, llm=None, verbose=False):
+    start_time = time.time()
+    verbose_print("Loading LLM...", verbose=verbose, end="")
+    if not llm:
+        llm = OpenAI(
+            model_name="gpt-3.5-turbo",
+            organization="org-ANpnkjrEDLjbQriFNhWllHVQ",
+            temperature=0.2,
+        )
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
 
-# start_time = time.time()
-# verbose_print("Loading LLM...", verbose=verbose, end="")
-# if not llm:
-#     llm = OpenAI(
-#         model_name="gpt-3.5-turbo",
-#         organization="org-ANpnkjrEDLjbQriFNhWllHVQ",
-#         temperature=0.2,
-#     )
-# end_time = time.time()
-# verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+    start_time = time.time()
+    verbose_print(
+        "Loading database and embeddings...", verbose=verbose, end=""
+    )
+    embeddings = HuggingFaceEmbeddings(model_name=HF_EMBEDDING_MODEL)
+    db = ModifiedMilvus(
+        embedding_function=embeddings,
+        connection_args={"host": "127.0.0.1", "port": "19530"},
+        collection_name="medline_collection",
+        text_field="text_field",
+    )
+    chain = VectorDBQAWithSourcesChain.from_chain_type(
+        llm, chain_type="map_reduce", vectorstore=db
+    )
+    chain.k = 8
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
 
-# start_time = time.time()
-# verbose_print("Loading database and embeddings...", verbose=verbose, end="")
-# embeddings = HuggingFaceEmbeddings(model_name=HF_EMBEDDING_MODEL)
-# db = ModifiedMilvus(
-#                 embedding_function=embeddings,
-#                 connection_args={"host": "127.0.0.1", "port": "19530"},
-#                 collection_name="medline_collection",
-#                 text_field="text_field",
-#             )
-# chain = VectorDBQAWithSourcesChain.from_chain_type(llm, chain_type="stuff", vectorstore=db)
-# chain.k = 8
-# end_time = time.time()
-# verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+    start_time = time.time()
+    verbose_print("Getting answer... ", verbose=verbose, end="")
+    result = chain({"question": query}, return_only_outputs=True)
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+    return result
 
-# start_time = time.time()
-# verbose_print("Getting answer... ", verbose=verbose, end="")
-# result = chain({"question": query}, return_only_outputs=True)
-# end_time = time.time()
-# verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+
+def get_qa_v9(query, llm=None, verbose=False):
+    start_time = time.time()
+    verbose_print("Loading LLM...", verbose=verbose, end="")
+    if not llm:
+        llm = OpenAI(
+            model_name="gpt-3.5-turbo",
+            organization="org-ANpnkjrEDLjbQriFNhWllHVQ",
+            temperature=0.2,
+        )
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+
+    start_time = time.time()
+    verbose_print(
+        "Loading database and embeddings...", verbose=verbose, end=""
+    )
+    embeddings = HuggingFaceEmbeddings(model_name=HF_EMBEDDING_MODEL)
+    db = ModifiedMilvus(
+        embedding_function=embeddings,
+        connection_args={"host": "127.0.0.1", "port": "19530"},
+        collection_name="medline_collection",
+        text_field="text_field",
+    )
+    chain = VectorDBQAWithSourcesChain.from_chain_type(
+        llm, chain_type="refine", vectorstore=db
+    )
+    chain.k = 8
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+
+    start_time = time.time()
+    verbose_print("Getting answer... ", verbose=verbose, end="")
+    result = chain({"question": query}, return_only_outputs=True)
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+    return result
+
+
+def get_qa_v10(query, llm=None, verbose=False):
+    start_time = time.time()
+    verbose_print("Loading LLM...", verbose=verbose, end="")
+    if not llm:
+        llm = OpenAI(
+            model_name="gpt-3.5-turbo",
+            organization="org-ANpnkjrEDLjbQriFNhWllHVQ",
+            temperature=0.8,
+        )
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+
+    start_time = time.time()
+    verbose_print(
+        "Loading database and embeddings...", verbose=verbose, end=""
+    )
+    embeddings = HuggingFaceEmbeddings(model_name=HF_EMBEDDING_MODEL)
+    db = ModifiedMilvus(
+        embedding_function=embeddings,
+        connection_args={"host": "127.0.0.1", "port": "19530"},
+        collection_name="medline_collection",
+        text_field="text_field",
+    )
+    chain = VectorDBQAWithSourcesChain.from_chain_type(
+        llm, chain_type="stuff", vectorstore=db
+    )
+    chain.k = 8
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+
+    start_time = time.time()
+    verbose_print("Getting answer... ", verbose=verbose, end="")
+    result = chain({"question": query}, return_only_outputs=True)
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+    return result
+
+
+def get_qa_v11(query, llm=None, verbose=False):
+    start_time = time.time()
+    verbose_print("Loading LLM...", verbose=verbose, end="")
+    if not llm:
+        llm = OpenAI(
+            model_name="gpt-3.5-turbo",
+            organization="org-ANpnkjrEDLjbQriFNhWllHVQ",
+            temperature=0.8,
+        )
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+
+    start_time = time.time()
+    verbose_print(
+        "Loading database and embeddings...", verbose=verbose, end=""
+    )
+    embeddings = HuggingFaceEmbeddings(model_name=HF_EMBEDDING_MODEL)
+    db = ModifiedMilvus(
+        embedding_function=embeddings,
+        connection_args={"host": "127.0.0.1", "port": "19530"},
+        collection_name="medline_collection",
+        text_field="text_field",
+    )
+    chain = VectorDBQAWithSourcesChain.from_chain_type(
+        llm, chain_type="map_reduce", vectorstore=db
+    )
+    chain.k = 8
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+
+    start_time = time.time()
+    verbose_print("Getting answer... ", verbose=verbose, end="")
+    result = chain({"question": query}, return_only_outputs=True)
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+    return result
+
+
+def get_qa_v12(query, llm=None, verbose=False):
+    start_time = time.time()
+    verbose_print("Loading LLM...", verbose=verbose, end="")
+    if not llm:
+        llm = OpenAI(
+            model_name="gpt-3.5-turbo",
+            organization="org-ANpnkjrEDLjbQriFNhWllHVQ",
+            temperature=0.8,
+        )
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+
+    start_time = time.time()
+    verbose_print(
+        "Loading database and embeddings...", verbose=verbose, end=""
+    )
+    embeddings = HuggingFaceEmbeddings(model_name=HF_EMBEDDING_MODEL)
+    db = ModifiedMilvus(
+        embedding_function=embeddings,
+        connection_args={"host": "127.0.0.1", "port": "19530"},
+        collection_name="medline_collection",
+        text_field="text_field",
+    )
+    chain = VectorDBQAWithSourcesChain.from_chain_type(
+        llm, chain_type="refine", vectorstore=db
+    )
+    chain.k = 8
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+
+    start_time = time.time()
+    verbose_print("Getting answer... ", verbose=verbose, end="")
+    result = chain({"question": query}, return_only_outputs=True)
+    end_time = time.time()
+    verbose_print(f"{int(end_time - start_time)} secs", verbose=verbose)
+    return result
