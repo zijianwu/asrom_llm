@@ -21,9 +21,11 @@ from asrom_llm.utils import get_key_from_value, load_json, save_json
 QUERIES = {
     "What are some non‐pharmacological interventions for headache in children and adolescents?": None,
     "What are the indications for spontaneous bacterial peritonitis prophylaxis?": None,
-    "What are the reasons to start antibiotics to prevent spontaneous bacterial peritonitis prophylaxis?": None,
+    "What are the reasons to start antibiotics to prevent spontaneous bacterial peritonitis prophylaxis?": [
+        get_qa_v1
+    ],  # Bad question
     "Does psilocybin cause psychosis?": None,
-    "How do you diagnose and treat superior mesenteric artery syndrome?": None,
+    "How do you diagnose and treat superior mesenteric artery syndrome?": None,  # Does not give results in Pubmed due to odd Pubmed search issue
 }
 QA_FUNCTIONS = {
     "v1": get_qa_v1,
@@ -42,17 +44,23 @@ QA_FUNCTIONS = {
 RESULTS_PATH = "results.json"
 HF_EMBEDDING_MODEL = "pritamdeka/S-PubMedBert-MS-MARCO"
 
-if os.path.isfile(RESULTS_PATH):
-    results = load_json(RESULTS_PATH)
-    results = defaultdict(lambda: defaultdict(str), results)
-else:
-    results = defaultdict(lambda: defaultdict(str))
+
+def load_results_json(RESULTS_PATH):
+    if os.path.isfile(RESULTS_PATH):
+        results = load_json(RESULTS_PATH)
+        results = defaultdict(lambda: defaultdict(str), results)
+    else:
+        results = defaultdict(lambda: defaultdict(str))
+    return results
+
 
 for query, functions in QUERIES.items():
     if functions is None:
         functions = QA_FUNCTIONS.values()
     for function in functions:
+        results = load_results_json(RESULTS_PATH)
         version = get_key_from_value(function, QA_FUNCTIONS)
-        results = process_query(results, query, version, function)
-
-save_json(results, RESULTS_PATH)
+        results = process_query(
+            results, query, version, function, verbose=True
+        )
+        save_json(results, RESULTS_PATH)

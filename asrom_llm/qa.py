@@ -16,17 +16,17 @@ from asrom_llm.utils import verbose_print
 HF_EMBEDDING_MODEL = "pritamdeka/S-PubMedBert-MS-MARCO"
 
 
-def process_query(results, query, version, function):
+def process_query(results, query, version, function, verbose=False):
     if not results[query].get(version, None):
         try:
-            result = function(query, verbose=True)
+            result = function(query, verbose=verbose)
             results[query][version] = result
         except Exception as e:
             print(f"Error processing {query} with {version}: {e}")
     return results
 
 
-# Pubmed Search, Stuff, 0.2 temperature
+# Pubmed Search, Stuff, 0.2 temperature, 3.5 turbo, OpenAI
 def get_qa_v1(query, llm=None, verbose=False):
     start_time = time.time()
     verbose_print("Loading LLM...", verbose=verbose, end="")
@@ -69,7 +69,7 @@ def get_qa_v1(query, llm=None, verbose=False):
     return result
 
 
-# Pubmed Search, Map Reduce, 0.2 temperature
+# Pubmed Search, Map Reduce, 0.2 temperature, 3.5 turbo, ChatOpenAI
 def get_qa_v2(query, llm=None, verbose=False):
     start_time = time.time()
     verbose_print("Loading LLM...", verbose=verbose, end="")
@@ -119,7 +119,7 @@ def get_qa_v2(query, llm=None, verbose=False):
     return result
 
 
-# Pubmed Search, Refine, 0.2 temperature
+# Pubmed Search, Refine, 0.2 temperature, 3.5 turbo, ChatOpenAI
 def get_qa_v3(query, llm=None, verbose=False):
     start_time = time.time()
     verbose_print("Loading LLM...", verbose=verbose, end="")
@@ -169,7 +169,7 @@ def get_qa_v3(query, llm=None, verbose=False):
     return result
 
 
-# Pubmed Search, Stuff, 0.8 temperature
+# Pubmed Search, Stuff, 0.8 temperature, 3.5 turbo, OpenAI
 def get_qa_v4(query, llm=None, verbose=False):
     start_time = time.time()
     verbose_print("Loading LLM...", verbose=verbose, end="")
@@ -212,7 +212,7 @@ def get_qa_v4(query, llm=None, verbose=False):
     return result
 
 
-# Pubmed Search, Map Reduce, 0.8 temperature
+# Pubmed Search, Map Reduce, 0.8 temperature, 3.5 turbo, ChatOpenAI
 def get_qa_v5(query, llm=None, verbose=False):
     start_time = time.time()
     verbose_print("Loading LLM...", verbose=verbose, end="")
@@ -262,7 +262,7 @@ def get_qa_v5(query, llm=None, verbose=False):
     return result
 
 
-# Pubmed Search, Refine, 0.8 temperature
+# Pubmed Search, Refine, 0.8 temperature, 3.5 turbo, ChatOpenAI
 def get_qa_v6(query, llm=None, verbose=False):
     start_time = time.time()
     verbose_print("Loading LLM...", verbose=verbose, end="")
@@ -312,6 +312,7 @@ def get_qa_v6(query, llm=None, verbose=False):
     return result
 
 
+# Database Search, Stuff, 0.2 temperature, 3.5 turbo, OpenAI
 def get_qa_v7(query, llm=None, verbose=False):
     start_time = time.time()
     verbose_print("Loading LLM...", verbose=verbose, end="")
@@ -350,11 +351,12 @@ def get_qa_v7(query, llm=None, verbose=False):
     return result
 
 
+# Database Search, Map Reduce, 0.2 temperature, 3.5 turbo, ChatOpenAI
 def get_qa_v8(query, llm=None, verbose=False):
     start_time = time.time()
     verbose_print("Loading LLM...", verbose=verbose, end="")
     if not llm:
-        llm = OpenAI(
+        llm = ChatOpenAI(
             model_name="gpt-3.5-turbo",
             organization="org-ANpnkjrEDLjbQriFNhWllHVQ",
             temperature=0.2,
@@ -388,11 +390,12 @@ def get_qa_v8(query, llm=None, verbose=False):
     return result
 
 
+# Database Search, Refine, 0.2 temperature, 3.5 turbo, ChatOpenAI
 def get_qa_v9(query, llm=None, verbose=False):
     start_time = time.time()
     verbose_print("Loading LLM...", verbose=verbose, end="")
     if not llm:
-        llm = OpenAI(
+        llm = ChatOpenAI(
             model_name="gpt-3.5-turbo",
             organization="org-ANpnkjrEDLjbQriFNhWllHVQ",
             temperature=0.2,
@@ -426,6 +429,7 @@ def get_qa_v9(query, llm=None, verbose=False):
     return result
 
 
+# Database Search, Stuff, 0.8 temperature, 3.5 turbo, OpenAI
 def get_qa_v10(query, llm=None, verbose=False):
     start_time = time.time()
     verbose_print("Loading LLM...", verbose=verbose, end="")
@@ -464,11 +468,12 @@ def get_qa_v10(query, llm=None, verbose=False):
     return result
 
 
+# Database Search, Map Reduce, 0.8 temperature, 3.5 turbo, ChatOpenAI
 def get_qa_v11(query, llm=None, verbose=False):
     start_time = time.time()
     verbose_print("Loading LLM...", verbose=verbose, end="")
     if not llm:
-        llm = OpenAI(
+        llm = ChatOpenAI(
             model_name="gpt-3.5-turbo",
             organization="org-ANpnkjrEDLjbQriFNhWllHVQ",
             temperature=0.8,
@@ -502,11 +507,12 @@ def get_qa_v11(query, llm=None, verbose=False):
     return result
 
 
+# Database Search, Refine, 0.8 temperature, 3.5 turbo, ChatOpenAI
 def get_qa_v12(query, llm=None, verbose=False):
     start_time = time.time()
     verbose_print("Loading LLM...", verbose=verbose, end="")
     if not llm:
-        llm = OpenAI(
+        llm = ChatOpenAI(
             model_name="gpt-3.5-turbo",
             organization="org-ANpnkjrEDLjbQriFNhWllHVQ",
             temperature=0.8,
