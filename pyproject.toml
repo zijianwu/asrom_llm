@@ -17,6 +17,8 @@ transformers = "^4.27.1"
 sentence-transformers = "^2.2.2"
 pubmed-parser = {git = "https://github.com/titipata/pubmed_parser.git"}
 pymilvus = "2.2.0"
+flask = "^2.2.3"
+streamlit = "^1.20.0"
 
 
 
