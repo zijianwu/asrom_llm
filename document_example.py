@@ -1,7 +1,7 @@
 from asrom_llm.document import DocumentOutline
-from asrom_llm.query_document import get_outline
 
 TITLE = "Chronic mesenteric ischemia"
-outline = get_outline(title=TITLE)
-document = DocumentOutline(title=TITLE).create_toc_from_outline(outline)
-document.print_toc()
+document = DocumentOutline(
+    title=TITLE, model_name="gpt-3.5-turbo", temperature=0.3, max_tokens=256
+)
+document = document.add_content(verbose=True)

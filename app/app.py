@@ -4,7 +4,8 @@ import time
 import requests
 import streamlit as st
 
-API_ENDPOINT = "http://localhost:5000/search"
+QA_API_ENDPOINT = "http://localhost:5000/qa"
+CLINICAL_REFERENCE_API_ENDPOINT = "http://localhost:5000/clinical_reference"
 TEST_USER_NAME = "user"
 TEST_PASSWORD = "password"
 
@@ -38,14 +39,21 @@ def requires_authentication(func):
 
 
 @requires_authentication
-def search():
-    search_query = st.text_input("Enter Search Query")
+def question_and_answer_page():
+    query = st.text_input("Enter question")
     if st.button("Search"):
         with st.spinner("Loading..."):
-            response = requests.get(
-                API_ENDPOINT, params={"query": search_query}
-            )
+            response = requests.get(QA_API_ENDPOINT, params={"query": query})
         st.write(response.text)
+
+
+@requires_authentication
+def clinical_reference_page():
+    query = st.text_input("Enter title for clinical reference article")
+    if st.button("Search"):
+        with st.spinner("Loading..."):
+            response = requests.get(CLINICAL_REFERENCE_API_ENDPOINT, params={"query": query})
+        st.markdown(response.text)
 
 
 def login_form():
@@ -65,4 +73,10 @@ if "logged_in" not in st.session_state:
 if not st.session_state.logged_in:
     login_form()
 else:
-    search()
+    search_version = st.sidebar.selectbox(
+        "Choose functionality", ("Clinical Reference", "Question and Answer")
+    )
+    if search_version == "Question and Answer":
+        question_and_answer_page()
+    elif search_version == "Clinical Reference":
+        clinical_reference_page()
