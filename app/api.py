@@ -1,7 +1,7 @@
 from flask import Flask, make_response, request
 
+from asrom_llm.build_clinical_reference import get_clinical_reference
 from asrom_llm.qa import get_qa_v1
-from asrom_llm.query_document import get_clinical_reference
 
 app = Flask(__name__)
 
@@ -21,6 +21,7 @@ def search():
 
 @app.route("/clinical_reference")
 def clinical_reference():
+    # TODO: Add a clinical reference document caching
     query = request.args.get("query")
 
     if not query:

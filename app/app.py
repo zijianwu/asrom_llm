@@ -49,6 +49,10 @@ def question_and_answer_page():
 
 @requires_authentication
 def clinical_reference_page():
+    # TODO: Add a table of contents to the UI
+    # TODO: Allow users to flag specific sections of the document (e.g., correctness)
+    # TODO: Allow users to rate articles
+    # TODO: Allow users to make edits
     query = st.text_input("Enter title for clinical reference article")
     if st.button("Search"):
         with st.spinner("Loading..."):

@@ -80,9 +80,7 @@ class ModifiedMilvus(Milvus):
             )
         # Connect to Milvus instance
         if not connections.has_connection("default"):
-            connections.connect(
-                **kwargs.get("connection_args", {"port": 19530})
-            )
+            connections.connect(**kwargs.get("connection_args", {"port": 19530}))
         # Determine embedding dim
         embeddings = embedding.embed_query(texts[0])
         dim = len(embeddings)
@@ -109,37 +107,25 @@ class ModifiedMilvus(Milvus):
                     raise ValueError(f"Unrecognized datatype for {key}.")
                 elif dtype == DataType.VARCHAR:
                     # Find out max length text based metadata
+                    # TODO: Choose better max_length based on the length of the text
                     max_length = 1_000  # 0
                     # for subvalues in metadatas:
                     #     max_length = max(max_length, len(subvalues[key]))
-                    fields.append(
-                        FieldSchema(
-                            key, DataType.VARCHAR, max_length=max_length + 1
-                        )
-                    )
+                    fields.append(FieldSchema(key, DataType.VARCHAR, max_length=max_length + 1))
                 else:
                     fields.append(FieldSchema(key, dtype))
 
         # Find out max length of texts
+        # TODO: Choose better max_length based on the length of the text
         max_length = 1_000  # 0
         # for y in texts:
         #     max_length = max(max_length, len(y))
         # Create the text field
-        fields.append(
-            FieldSchema(
-                text_field, DataType.VARCHAR, max_length=max_length + 1
-            )
-        )
+        fields.append(FieldSchema(text_field, DataType.VARCHAR, max_length=max_length + 1))
         # Create the primary key field
-        fields.append(
-            FieldSchema(
-                primary_field, DataType.INT64, is_primary=True, auto_id=True
-            )
-        )
+        fields.append(FieldSchema(primary_field, DataType.INT64, is_primary=True, auto_id=True))
         # Create the vector field
-        fields.append(
-            FieldSchema(vector_field, DataType.FLOAT_VECTOR, dim=dim)
-        )
+        fields.append(FieldSchema(vector_field, DataType.FLOAT_VECTOR, dim=dim))
         # Create the schema for the collection
         schema = CollectionSchema(fields)
         # Create the collection
